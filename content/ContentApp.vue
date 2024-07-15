@@ -8,8 +8,8 @@ const isEnabled = ref<boolean>(false)
 const historyQueue = reactive<{ key: string[] }>({ key: [] })
 const currentQueue = reactive<{ key: string[] }>({ key: [] })
 
-const { ready: inputCompleteReady, start: startInputComplete } = useTimeout(600, { controls: true })
-const { ready: inputTimeoutReady, start: startInputTimeout } = useTimeout(2000, { controls: true })
+const { ready: inputCompleteReady, start: startInputComplete } = useTimeout(800, { controls: true })
+const { ready: inputTimeoutReady, start: startInputTimeout } = useTimeout(2400, { controls: true })
 
 
 onKeyPressed(true, (e) => {
@@ -50,14 +50,16 @@ onMounted(() => {
     <div class="flex flex-col gap-2 items-start">
       <TransitionGroup>
         <template v-for="queue in historyQueue.key">
-          <kbd class="kbd" v-if="queue.length > 0">
+          <kbd class="kbd kbd-sm" v-if="queue.length > 0">
             {{ queue }}
           </kbd>
         </template>
       </TransitionGroup>
     </div>
-    <kbd v-if="currentQueue.key.length > 0" class="kbd font-semibold">
-      {{ currentQueue.key.join('') }}
-    </kbd>
+    <div class="flex items-center">
+      <kbd class="kbd" v-for="key in currentQueue.key">
+        {{ key }}
+      </kbd>
+    </div>
   </div>
 </template>
