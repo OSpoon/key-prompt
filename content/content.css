@@ -1,0 +1,6 @@
+#key-display-in-browser-root {
+  position: fixed;
+  bottom: 15px;
+  left: 15px;
+  z-index: 99999;
+}
