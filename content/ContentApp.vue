@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onKeyPressed, useTimeout } from '@vueuse/core'
+import { onKeyPressed, useTimeout } from '@vueuse/core';
 import { onMounted, reactive, ref, watch } from 'vue';
 
 const maxQueue = 4;
@@ -13,9 +13,11 @@ const { ready: inputTimeoutReady, start: startInputTimeout } = useTimeout(2400, 
 
 
 onKeyPressed(true, (e) => {
-  startInputComplete()
-  startInputTimeout()
-  currentQueue.key.push(e.key)
+  if (isEnabled.value) {
+    currentQueue.key.push(e.key)
+    startInputComplete()
+    startInputTimeout()
+  }
 }, { dedupe: true })
 
 // 输入完成后将内容转移到历史队列并清空当前队列
@@ -43,6 +45,9 @@ onMounted(() => {
       isEnabled.value = request.status
     }
   });
+  chrome.storage.local.get(['key'], (items) => {
+    isEnabled.value = items.key;
+  });
 })
 </script>
 <template>
@@ -50,13 +55,13 @@ onMounted(() => {
     <div class="flex flex-col gap-2 items-start">
       <TransitionGroup>
         <template v-for="queue in historyQueue.key">
-          <kbd class="kbd kbd-sm" v-if="queue.length > 0">
+          <kbd class="kbd" v-if="queue.length > 0">
             {{ queue }}
           </kbd>
         </template>
       </TransitionGroup>
     </div>
-    <div class="flex items-center">
+    <div class="flex gap-x-0.5 items-center">
       <kbd class="kbd" v-for="key in currentQueue.key">
         {{ key }}
       </kbd>

@@ -1,13 +1,20 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 
 const isEnabled = ref<boolean>(false);
 
-watch(isEnabled, (bool) => {
-    chrome.runtime.sendMessage({
-        type: 'enable-key-display',
+watch(isEnabled, async (bool) => {
+    await chrome.storage.local.set({ key: bool })
+    await chrome.runtime.sendMessage({
+        action: 'enable-key-display',
         status: bool
     })
+})
+
+onMounted(() => {
+    chrome.storage.local.get(['key'], (items) => {
+        isEnabled.value = items.key;
+    });
 })
 </script>
 <template>
