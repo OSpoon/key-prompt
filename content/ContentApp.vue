@@ -3,11 +3,11 @@ import { onKeyPressed, useTimeout } from '@vueuse/core'
 import { onMounted, reactive, ref, watch } from 'vue';
 
 const maxQueue = 4;
+
 const isEnabled = ref<boolean>(false)
-const historyQueue = reactive<{ key: string[] }>({
-  key: []
-})
+const historyQueue = reactive<{ key: string[] }>({ key: [] })
 const currentQueue = reactive<{ key: string[] }>({ key: [] })
+
 const { ready: inputCompleteReady, start: startInputComplete } = useTimeout(600, { controls: true })
 const { ready: inputTimeoutReady, start: startInputTimeout } = useTimeout(2000, { controls: true })
 
