@@ -2,34 +2,40 @@
 import { onKeyPressed, useTimeout } from '@vueuse/core'
 import { onMounted, reactive, ref, watch } from 'vue';
 
-const maxKeyLen = 5;
+const maxQueue = 4;
 const isEnabled = ref<boolean>(false)
-const queue = reactive<{
-  key: string[]
-}>({
+const historyQueue = reactive<{ key: string[] }>({
   key: []
 })
-const { ready, start } = useTimeout(1500, { controls: true })
+const currentQueue = reactive<{ key: string[] }>({ key: [] })
+const { ready: inputCompleteReady, start: startInputComplete } = useTimeout(600, { controls: true })
+const { ready: inputTimeoutReady, start: startInputTimeout } = useTimeout(2000, { controls: true })
+
 
 onKeyPressed(true, (e) => {
-  // if (isEnabled.value) {
-  start()
-  if (queue.key.length === maxKeyLen) {
-    queue.key.shift()
-  }
-  queue.key.push(e.key)
-  // }
+  startInputComplete()
+  startInputTimeout()
+  currentQueue.key.push(e.key)
 }, { dedupe: true })
 
-watch(ready, (bool) => {
+// 输入完成后将内容转移到历史队列并清空当前队列
+watch(inputCompleteReady, (bool) => {
   if (bool) {
-    queue.key = []
+    if (historyQueue.key.length === maxQueue) {
+      historyQueue.key.shift()
+    }
+    historyQueue.key?.push(currentQueue.key.join(''))
+    currentQueue.key = []
   }
 })
 
-const newKeyClass = (index: number) => {
-  return index === queue.key.length - 1 ? 'kbd-lg font-semibold text-[#f5deb3]' : ''
-}
+// 输入超时后清空历史队列和当前队列
+watch(inputTimeoutReady, (bool) => {
+  if (bool) {
+    currentQueue.key = []
+    historyQueue.key = []
+  }
+})
 
 onMounted(() => {
   chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
@@ -40,11 +46,18 @@ onMounted(() => {
 })
 </script>
 <template>
-  <div class="flex flex-col gap-1 items-center bg-transparent text-gray-300" data-theme="dark">
-    <template v-for="(key, index) in queue.key" :key="key + index">
-      <kbd class="kbd" :class="newKeyClass(index)">
-        {{ key }}
-      </kbd>
-    </template>
+  <div data-theme="dark" class="flex flex-col gap-3 bg-transparent tracking-wide text-[#f5deb3]">
+    <div class="flex flex-col gap-2 items-start">
+      <TransitionGroup>
+        <template v-for="queue in historyQueue.key">
+          <kbd class="kbd" v-if="queue.length > 0">
+            {{ queue }}
+          </kbd>
+        </template>
+      </TransitionGroup>
+    </div>
+    <kbd v-if="currentQueue.key.length > 0" class="kbd font-semibold">
+      {{ currentQueue.key.join('') }}
+    </kbd>
   </div>
 </template>
