@@ -23,13 +23,14 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0.5rem;
+  border-radius: 8px;
   border-width: 1px;
   border-color: oklch(0.746477 0.0216 264.436 / 0.2);
   background-color: oklch(0.232607 0.013807 253.101);
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
+  padding-left: 8px;
+  padding-right: 8px;
   border-bottom-width: 2px;
-  min-height: 2.2em;
-  min-width: 2.2em;
+  min-height: 35px;
+  min-width: 35px;
+  color: #f5deb3;
 }

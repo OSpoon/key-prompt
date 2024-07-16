@@ -47,8 +47,8 @@ onMounted(() => {
 })
 </script>
 <template>
-  <div data-theme="dark" class="flex flex-col gap-3 bg-transparent tracking-wide text-[#f5deb3]">
-    <div class="flex flex-col gap-2 items-start">
+  <div data-theme="dark" class="flex flex-col gap-[6px] bg-transparent">
+    <div class="flex flex-col gap-[4px] items-start">
       <TransitionGroup>
         <template v-for="queue in historyQueue.key">
           <kbd v-if="queue.length > 0" class="kbd">
@@ -57,7 +57,7 @@ onMounted(() => {
         </template>
       </TransitionGroup>
     </div>
-    <div class="flex gap-x-0.5 items-center">
+    <div class="flex gap-x-[2px] items-center">
       <kbd class="kbd" v-for="key in currentQueue.key">
         {{ key }}
       </kbd>
