@@ -1,20 +1,17 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue';
+import { getLocalStorage, Keys, setLocalStorage } from '../shared/shared';
 
 const isEnabled = ref<boolean>(false);
 
 watch(isEnabled, async (bool) => {
-    await chrome.storage.local.set({ key: bool })
-    await chrome.runtime.sendMessage({
-        action: 'enable-key-display',
-        status: bool
-    })
+    setLocalStorage(Keys.BROWSER_KEY_TRACKING_ACTIVATE, bool)
 })
 
 onMounted(() => {
-    chrome.storage.local.get(['key'], (items) => {
-        isEnabled.value = items.key;
-    });
+    getLocalStorage(async (value) => {
+        isEnabled.value = value
+    })
 })
 </script>
 <template>

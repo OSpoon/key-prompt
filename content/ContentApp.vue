@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 import { onKeyPressed, useTimeout } from '@vueuse/core';
 import { onMounted, reactive, ref, watch } from 'vue';
+import { Keys, localStorageChanged$ } from '../shared/shared';
 
 const maxQueue = 4;
 
 const isEnabled = ref<boolean>(false)
-const historyQueue = reactive<{ key: string[] }>({ key: [] })
+const historyQueue = reactive<{ key: string[][] }>({ key: [] })
 const currentQueue = reactive<{ key: string[] }>({ key: [] })
 
 const { ready: inputCompleteReady, start: startInputComplete } = useTimeout(600, { controls: true })
@@ -26,7 +27,7 @@ watch(inputCompleteReady, (bool) => {
     if (historyQueue.key.length === maxQueue) {
       historyQueue.key.shift()
     }
-    historyQueue.key?.push(currentQueue.key.join(''))
+    historyQueue.key?.push(currentQueue.key)
     currentQueue.key = []
   }
 })
@@ -40,14 +41,9 @@ watch(inputTimeoutReady, (bool) => {
 })
 
 onMounted(() => {
-  chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-    if (request.action === 'toggle-key-display') {
-      isEnabled.value = request.status
-    }
-  });
-  chrome.storage.local.get(['key'], (items) => {
-    isEnabled.value = items.key;
-  });
+  localStorageChanged$.subscribe((changes) => {
+    isEnabled.value = Reflect.get(changes, Keys.BROWSER_KEY_TRACKING_ACTIVATE)?.newValue
+  })
 })
 </script>
 <template>
@@ -55,8 +51,8 @@ onMounted(() => {
     <div class="flex flex-col gap-2 items-start">
       <TransitionGroup>
         <template v-for="queue in historyQueue.key">
-          <kbd class="kbd" v-if="queue.length > 0">
-            {{ queue }}
+          <kbd class="kbd">
+            {{ queue.join('') }}
           </kbd>
         </template>
       </TransitionGroup>
