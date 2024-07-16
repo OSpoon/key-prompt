@@ -8,7 +8,7 @@ const isEnabled = ref<boolean>(false)
 const historyQueue = reactive<{ key: string[] }>({ key: [] })
 const currentQueue = reactive<{ key: string[] }>({ key: [] })
 
-const { ready: inputCompleteReady, start: startInputComplete } = useTimeout(800, { controls: true })
+const { ready: inputCompleteReady, start: startInputComplete } = useTimeout(600, { controls: true })
 const { ready: inputTimeoutReady, start: startInputTimeout } = useTimeout(2400, { controls: true })
 
 
