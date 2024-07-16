@@ -3,7 +3,7 @@ import { onKeyPressed, useTimeout } from '@vueuse/core';
 import { onMounted, reactive, ref, watch } from 'vue';
 import { Keys, localStorageChanged$ } from '../shared/shared';
 
-const maxQueue = 4;
+const maxQueue = 2;
 
 const isEnabled = ref<boolean>(false)
 const historyQueue = reactive<{ key: string[][] }>({ key: [] })
