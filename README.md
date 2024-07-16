@@ -2,6 +2,10 @@
 
 > An extension that displays the keys being operated.
 
+
+https://github.com/user-attachments/assets/0ac36402-8086-43e5-a8cd-d5cffa3b9568
+
+
 ## Scripts Available
 
 In the project directory, you can run:
