@@ -12,7 +12,7 @@
     "start": "extension start",
     "build": "extension build"
   },
-  "name": "key-display-in-browser",
+  "name": "browser-key-tracking",
   "private": true,
   "version": "0.0.0"
 }

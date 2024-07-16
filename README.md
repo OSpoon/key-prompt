@@ -1,4 +1,4 @@
-# key-display-in-browser
+# browser-key-tracking
 
 > An extension that displays the keys being operated.
 

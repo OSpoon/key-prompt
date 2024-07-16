@@ -3,4 +3,4 @@ import './styles.css'
 import { createApp } from 'vue'
 import NewPopup from './NewPopup.vue'
 
-createApp(NewPopup).mount('#key-display-in-browser-new-popup-app')
+createApp(NewPopup).mount('#browser-key-tracking-new-popup-app')
