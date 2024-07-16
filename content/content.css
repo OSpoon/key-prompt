@@ -5,20 +5,6 @@
   z-index: 99999;
 }
 
-.v-enter-active {
-  transition: opacity 0.5s ease;
-}
-
-.v-leave-active {
-  transition: all 0.5s ease;
-  transform: translateX(-100%);
-}
-
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
-}
-
 #browser-key-tracking-root .kbd {
   display: inline-flex;
   align-items: center;
@@ -33,4 +19,18 @@
   min-height: 35px;
   min-width: 35px;
   color: #f5deb3;
+}
+
+#browser-key-tracking-root .v-enter-active {
+  transition: opacity 0.5s ease;
+}
+
+#browser-key-tracking-root .v-leave-active {
+  transition: all 0.5s ease;
+  transform: translateX(-100%);
+}
+
+#browser-key-tracking-root .v-enter-from,
+#browser-key-tracking-root .v-leave-to {
+  opacity: 0;
 }
