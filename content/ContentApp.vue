@@ -51,7 +51,7 @@ onMounted(() => {
     <div class="flex flex-col gap-2 items-start">
       <TransitionGroup>
         <template v-for="queue in historyQueue.key">
-          <kbd class="kbd">
+          <kbd v-if="queue.length > 0" class="kbd">
             {{ queue.join('') }}
           </kbd>
         </template>
