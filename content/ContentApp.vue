@@ -47,7 +47,7 @@ onMounted(() => {
       <TransitionGroup>
         <template v-for="queue in history.key">
           <kbd v-if="queue.length > 0" class="kbd">
-            {{ queue.join('') }}
+            {{ queue.join(' ') }}
           </kbd>
         </template>
       </TransitionGroup>
