@@ -1,45 +1,39 @@
 <script lang="ts" setup>
 import './content.css'
-import { onKeyPressed, useTimeout } from '@vueuse/core';
-import { onMounted, reactive, ref, watch } from 'vue';
+import { onKeyDown, useDebounceFn } from '@vueuse/core';
+import { onMounted, reactive, ref } from 'vue';
 import { Keys, localStorageChanged$ } from '../shared/shared';
 
-const maxQueue = 2;
+const maxHistoryQueue = 2;
 
 const isEnabled = ref<boolean>(false)
-const historyQueue = reactive<{ key: string[][] }>({ key: [] })
-const currentQueue = reactive<{ key: string[] }>({ key: [] })
-
-const { ready: inputCompleteReady, start: startInputComplete } = useTimeout(600, { controls: true })
-const { ready: inputTimeoutReady, start: startInputTimeout } = useTimeout(2400, { controls: true })
-
-
-onKeyPressed(true, (e) => {
-  if (isEnabled.value) {
-    currentQueue.key.push(e.key)
-    startInputComplete()
-    startInputTimeout()
-  }
-}, { dedupe: true })
+const history = reactive<{ key: string[][] }>({ key: [] })
+const queue = reactive<{ key: string[] }>({ key: [] })
 
 // 输入完成后将内容转移到历史队列并清空当前队列
-watch(inputCompleteReady, (bool) => {
-  if (bool) {
-    if (historyQueue.key.length === maxQueue) {
-      historyQueue.key.shift()
-    }
-    historyQueue.key?.push(currentQueue.key)
-    currentQueue.key = []
+const inputCompleteReady = useDebounceFn(() => {
+  if (history.key.length === maxHistoryQueue) {
+    history.key.shift()
   }
-})
+  history.key?.push(queue.key)
+  queue.key = []
+}, 600)
 
 // 输入超时后清空历史队列和当前队列
-watch(inputTimeoutReady, (bool) => {
-  if (bool) {
-    currentQueue.key = []
-    historyQueue.key = []
+const inputTimeoutReady = useDebounceFn(() => {
+  queue.key = []
+  history.key = []
+}, 2400)
+
+// 监听按键事件
+onKeyDown(true, (e) => {
+  if (isEnabled.value) {
+    queue.key.push(e.key)
+
+    inputCompleteReady()
+    inputTimeoutReady()
   }
-})
+}, { dedupe: true })
 
 onMounted(() => {
   localStorageChanged$.subscribe((changes) => {
@@ -51,7 +45,7 @@ onMounted(() => {
   <div class="container">
     <div class="merge">
       <TransitionGroup>
-        <template v-for="queue in historyQueue.key">
+        <template v-for="queue in history.key">
           <kbd v-if="queue.length > 0" class="kbd">
             {{ queue.join('') }}
           </kbd>
@@ -59,7 +53,7 @@ onMounted(() => {
       </TransitionGroup>
     </div>
     <div class="single">
-      <kbd class="kbd" v-for="key in currentQueue.key">
+      <kbd class="kbd" v-for="key in queue.key">
         {{ key }}
       </kbd>
     </div>
