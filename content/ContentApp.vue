@@ -37,13 +37,13 @@ onKeyDown(true, (e) => {
 
 onMounted(() => {
   localStorageChanged$.subscribe((changes) => {
-    isEnabled.value = Reflect.get(changes, Keys.BROWSER_KEY_TRACKING_ACTIVATE)?.newValue
+    isEnabled.value = Reflect.get(changes, Keys.KEY_PROMPT_ACTIVATE)?.newValue
   })
 })
 </script>
 <template>
   <div class="container">
-    <div class="merge">
+    <div class="group">
       <TransitionGroup>
         <template v-for="queue in history.key">
           <kbd v-if="queue.length > 0" class="kbd">

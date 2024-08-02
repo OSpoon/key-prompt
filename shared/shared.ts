@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 
 export const Keys = {
-    BROWSER_KEY_TRACKING_ACTIVATE: 'key-prompt-activate'
+    KEY_PROMPT_ACTIVATE: 'key-prompt-activate'
 }
 
 export const localStorageChanged$ = new Observable<{
@@ -35,8 +35,8 @@ export async function setLocalStorage(key: string, value: any) {
 }
 
 export function getLocalStorage(callback: (value: any) => void) {
-    chrome.storage.local.get([Keys.BROWSER_KEY_TRACKING_ACTIVATE], (items) => {
-        const value = Reflect.get(items, Keys.BROWSER_KEY_TRACKING_ACTIVATE)
+    chrome.storage.local.get([Keys.KEY_PROMPT_ACTIVATE], (items) => {
+        const value = Reflect.get(items, Keys.KEY_PROMPT_ACTIVATE)
         callback(value)
     });
 }

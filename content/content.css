@@ -34,7 +34,7 @@
   align-items: flex-start;
 }
 
-#key-prompt .merge {
+#key-prompt .group {
   display: flex;
   flex-direction: column;
   gap: 4px;

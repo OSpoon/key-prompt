@@ -5,7 +5,7 @@ import { getLocalStorage, Keys, setLocalStorage } from '../shared/shared';
 const isEnabled = ref<boolean>(false);
 
 watch(isEnabled, async (bool) => {
-    setLocalStorage(Keys.BROWSER_KEY_TRACKING_ACTIVATE, bool)
+    setLocalStorage(Keys.KEY_PROMPT_ACTIVATE, bool)
 })
 
 onMounted(() => {
