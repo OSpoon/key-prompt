@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import './content.css'
 import { onKeyPressed, useTimeout } from '@vueuse/core';
 import { onMounted, reactive, ref, watch } from 'vue';
 import { Keys, localStorageChanged$ } from '../shared/shared';
@@ -47,8 +48,8 @@ onMounted(() => {
 })
 </script>
 <template>
-  <div data-theme="dark" class="flex flex-col gap-[6px] bg-transparent">
-    <div class="flex flex-col gap-[4px] items-start">
+  <div class="container">
+    <div class="merge">
       <TransitionGroup>
         <template v-for="queue in historyQueue.key">
           <kbd v-if="queue.length > 0" class="kbd">
@@ -57,7 +58,7 @@ onMounted(() => {
         </template>
       </TransitionGroup>
     </div>
-    <div class="flex gap-x-[2px] items-center">
+    <div class="single">
       <kbd class="kbd" v-for="key in currentQueue.key">
         {{ key }}
       </kbd>

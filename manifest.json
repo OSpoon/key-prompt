@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "version": "1.0",
-  "name": "browser-key-tracking",
+  "name": "key-prompt",
   "description": "An extension that displays the keys being operated",
   "background": {
     "service_worker": "./background.ts"

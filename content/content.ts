@@ -1,12 +1,10 @@
-import './base.css'
-import './content.css'
 import { createApp } from 'vue'
 import ContentApp from './ContentApp.vue'
 
 function initial() {
   const rootDiv = document.createElement('div')
-  rootDiv.id = 'browser-key-tracking-root'
-  document.body.appendChild(rootDiv)
+  rootDiv.id = 'key-prompt'
+  document.body.appendChild(rootDiv);
   createApp(ContentApp).mount(rootDiv)
 }
 
