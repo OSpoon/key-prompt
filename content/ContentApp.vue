@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import './content.css'
 import { onKeyDown, useDebounceFn } from '@vueuse/core';
 import { onMounted, reactive, ref } from 'vue';
 import { Keys, localStorageChanged$ } from '../shared/shared';
