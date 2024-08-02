@@ -1,11 +1,11 @@
-#browser-key-tracking-root {
+#key-prompt {
   position: fixed;
   bottom: 15px;
   left: 15px;
   z-index: 99999;
 }
 
-#browser-key-tracking-root .kbd {
+#key-prompt .kbd {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -21,16 +21,36 @@
   color: #f5deb3;
 }
 
-#browser-key-tracking-root .v-enter-active {
+#key-prompt .container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background-color: transparent;
+}
+
+#key-prompt .single {
+  display: flex;
+  gap: 4px;
+  align-items: flex-start;
+}
+
+#key-prompt .merge {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+}
+
+#key-prompt .v-enter-active {
   transition: opacity 0.5s ease;
 }
 
-#browser-key-tracking-root .v-leave-active {
+#key-prompt .v-leave-active {
   transition: all 0.5s ease;
   transform: translateX(-100%);
 }
 
-#browser-key-tracking-root .v-enter-from,
-#browser-key-tracking-root .v-leave-to {
+#key-prompt .v-enter-from,
+#key-prompt .v-leave-to {
   opacity: 0;
 }

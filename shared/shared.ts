@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 
 export const Keys = {
-    BROWSER_KEY_TRACKING_ACTIVATE: 'browser-key-tracking-activate'
+    BROWSER_KEY_TRACKING_ACTIVATE: 'key-prompt-activate'
 }
 
 export const localStorageChanged$ = new Observable<{

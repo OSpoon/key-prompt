@@ -1,4 +1,4 @@
-# browser-key-tracking
+# key-prompt
 
 > An extension that displays the keys being operated.
 
