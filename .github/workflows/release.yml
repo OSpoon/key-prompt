@@ -31,11 +31,6 @@ jobs:
       - name: Build Chrome Extension
         run: npm run build:zip
 
-      - name: Generate Release Notes
-        run: npx changelogithub
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
