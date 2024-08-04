@@ -33,11 +33,6 @@ jobs:
           VERSION=$(jq -r .version manifest.json)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-      - name: Configure git
-        run: |
-          git config --global user.email "zxin088@gmail.com"
-          git config --global user.name "OSpoon"
-
       - name: Create new tag
         id: create_tag
         env:
