@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+permissions:
+  pull-requests: write
 
 jobs:
   build:
@@ -71,6 +73,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.KEY_PROMPT_GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./key-prompt-${{ env.VERSION }}.zip
+          asset_path: ./dist/chrome/key-prompt-${{ env.VERSION }}.zip
           asset_name: key-prompt-${{ env.VERSION }}.zip
           asset_content_type: application/zip
