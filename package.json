@@ -11,7 +11,8 @@
   "scripts": {
     "dev": "extension dev",
     "start": "extension start",
-    "build": "extension build"
+    "build": "extension build",
+    "build:zip": "extension build --zip"
   },
   "name": "key-prompt",
   "private": true,
