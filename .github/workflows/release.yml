@@ -1,0 +1,66 @@
+name: Build and Release Chrome Extension
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build extension
+        run: npm run build:zip
+
+      - name: Read version from manifest.json
+        id: get_version
+        run: |
+          VERSION=$(jq -r .version manifest.json)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Create new tag
+        id: create_tag
+        run: |
+          git tag -a v${{ env.VERSION }} -m "Release version ${{ env.VERSION }}"
+          git push origin v${{ env.VERSION }}
+          
+      - name: Install github-changelog-generator
+        run: |
+          sudo apt-get install -y ruby ruby-dev
+          gem install github_changelog_generator
+
+      - name: Generate changelog
+        run: github_changelog_generator -u <ospoon> -p <key-prompt> --token ${{ secrets.KEY_PROMPT_GITHUB_TOKEN }}
+        
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.KEY_PROMPT_GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ env.VERSION }}
+          release_name: Release ${{ env.VERSION }}
+          body_path: CHANGELOG.md
+          draft: false
+          prerelease: false
+
+      - name: Upload release asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.KEY_PROMPT_GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./key-prompt-${{ env.VERSION }}.zip
+          asset_name: key-prompt-${{ env.VERSION }}.zip
+          asset_content_type: application/zip
