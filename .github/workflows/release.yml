@@ -32,9 +32,9 @@ jobs:
         run: npm run build:zip
 
       - name: Generate Release Notes
-        id: release_notes
-        run: |
-          echo "release_notes=$(cat CHANGELOG.md)" >> $GITHUB_OUTPUT
+        run: npx changelogithub
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Create Release
         id: create_release
