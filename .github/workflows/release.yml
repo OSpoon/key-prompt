@@ -35,11 +35,11 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "::set-output name=version::$VERSION"
 
-      - name: Upload build artifacts
+      - name: Archive build artifacts
         uses: actions/upload-artifact@v3
         with:
           name: chrome-extension
-          path: ./dist/chrome/key-prompt-${{ env.VERSION }}.zip
+          path: ./dist/chrome/key-prompt-${{ steps.get_version.outputs.version }}.zip
 
   release:
     runs-on: ubuntu-latest
@@ -53,18 +53,6 @@ jobs:
         with:
           name: chrome-extension
 
-      - name: Set up Node.js for changelog
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-
-      - name: Install auto-changelog
-        run: npm install -g auto-changelog
-
-      - name: Generate changelog
-        run: |
-          auto-changelog --unreleased --stdout > CHANGELOG.md
-          
       - name: Configure git
         run: |
           git config --global user.email "github-actions@github.com"
@@ -76,6 +64,17 @@ jobs:
         run: |
           git tag -a v${{ needs.build.outputs.version }} -m "Release version ${{ needs.build.outputs.version }}"
           git push https://x-access-token:${{ secrets.KEY_PROMPT_GITHUB_TOKEN }}@github.com/OSpoon/key-prompt.git v${{ needs.build.outputs.version }}
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.0'
+
+      - name: Install github-changelog-generator
+        run: gem install github_changelog_generator
+
+      - name: Generate changelog
+        run: github_changelog_generator -u OSpoon -p key-prompt --token ${{ secrets.KEY_PROMPT_GITHUB_TOKEN }}
 
       - name: Create GitHub Release
         id: create_release
