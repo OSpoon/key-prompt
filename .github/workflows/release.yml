@@ -1,13 +1,13 @@
-name: Auto Pack and Release Chrome Extension
+name: Build and Release Chrome Extension
 
 on:
-  workflow_dispatch: # 允许手动触发工作流
+  workflow_dispatch:
   push:
     branches:
       - main
 
 jobs:
-  pack_and_release:
+  build_and_release:
     runs-on: ubuntu-latest
 
     steps:
@@ -37,7 +37,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v$(cat version)
+          tag_name: v$(cat steps.extract_version.outputs.version)
           release_name: Release v$(cat steps.extract_version.outputs.version)
           body: ${{ steps.release_notes.outputs.release_notes }}
           draft: false
