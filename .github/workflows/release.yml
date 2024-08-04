@@ -29,22 +29,30 @@ jobs:
           VERSION=$(jq -r .version manifest.json)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-      - name: Create new tag
-        id: create_tag
+      - name: Configure git
         run: |
           git config --global user.email "zxin088@gmail.com"
           git config --global user.name "OSpoon"
-          git tag -a v${{ env.VERSION }} -m "Release version ${{ env.VERSION }}"
-          git push origin v${{ env.VERSION }}
-          
-      - name: Install github-changelog-generator
+
+      - name: Create new tag
+        id: create_tag
+        env:
+          GH_TOKEN: ${{ secrets.KEY_PROMPT_GITHUB_TOKEN }}
         run: |
-          sudo apt-get install -y ruby ruby-dev
-          gem install github_changelog_generator
+          git tag -a v${{ env.VERSION }} -m "Release version ${{ env.VERSION }}"
+          git push https://x-access-token:${{ secrets.KEY_PROMPT_GITHUB_TOKEN }}@github.com/OSpoon/key-prompt.git v${{ env.VERSION }}
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.0'
+
+      - name: Install github-changelog-generator
+        run: gem install github_changelog_generator
 
       - name: Generate changelog
-        run: github_changelog_generator -u <ospoon> -p <key-prompt> --token ${{ secrets.KEY_PROMPT_GITHUB_TOKEN }}
-        
+        run: github_changelog_generator -u OSpoon -p key-prompt --token ${{ secrets.KEY_PROMPT_GITHUB_TOKEN }}
+
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
