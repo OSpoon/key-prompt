@@ -16,7 +16,7 @@ const inputCompleteReady = useDebounceFn(() => {
   }
   history.key?.push(queue.key)
   queue.key = []
-}, 600)
+}, 300)
 
 // 输入超时后清空历史队列和当前队列
 const inputTimeoutReady = useDebounceFn(() => {
