@@ -1,0 +1,55 @@
+name: Auto Pack and Release Chrome Extension
+
+on:
+  workflow_dispatch: # 允许手动触发工作流
+  push:
+    branches:
+      - main
+
+jobs:
+  pack_and_release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Chrome Extension
+        run: npm run build:zip
+        env:
+          VERSION_FILE: version
+
+      - name: Generate Release Notes
+        id: release_notes
+        run: |
+          echo "release_notes=$(cat CHANGELOG.md)" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v$(cat version)
+          release_name: Release v$(cat version)
+          body: ${{ steps.release_notes.outputs.release_notes }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/chrome/key-prompt-(cat version).zip
+          asset_name: key-prompt-(cat version).zip
+          asset_content_type: application/zip
