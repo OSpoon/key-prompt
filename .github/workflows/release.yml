@@ -18,14 +18,18 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20
+          
+      - name: Extract Version from Manifest
+        id: extract_version
+        run: |
+          VERSION=$(node -e "console.log(require('./manifest.json').version);")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Install dependencies
         run: npm ci
 
       - name: Build Chrome Extension
         run: npm run build:zip
-        env:
-          VERSION_FILE: version
 
       - name: Generate Release Notes
         id: release_notes
@@ -39,7 +43,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v$(cat version)
-          release_name: Release v$(cat version)
+          release_name: Release v$(cat steps.extract_version.outputs.version)
           body: ${{ steps.release_notes.outputs.release_notes }}
           draft: false
           prerelease: false
@@ -50,6 +54,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/chrome/key-prompt-(cat version).zip
-          asset_name: key-prompt-(cat version).zip
+          asset_path: ./dist/chrome/key-prompt-(cat steps.extract_version.outputs.version).zip
+          asset_name: key-prompt-(cat steps.extract_version.outputs.version).zip
           asset_content_type: application/zip
