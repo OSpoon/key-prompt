@@ -16,7 +16,7 @@
     "start": "extension start",
     "build": "extension build",
     "build:zip": "extension build --zip",
-    "version": "npx esno ./scripts/version.ts"
+    "version": "node ./update-version.js"
   },
   "name": "key-prompt",
   "private": true,
