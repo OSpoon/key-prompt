@@ -35,20 +35,21 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.KEY_PROMPT_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v$(cat steps.extract_version.outputs.version)
-          release_name: Release v$(cat steps.extract_version.outputs.version)
-          body: ${{ steps.release_notes.outputs.release_notes }}
+          # Use the extracted version directly without the 'v' prefix and concatenation
+          tag_name: ${{ steps.extract_version.outputs.version }}
+          release_name: Release ${{ steps.extract_version.outputs.version }}
+          body: ${{ steps.release_notes.outputs.release_notes }} # Ensure this step exists or remove it
           draft: false
           prerelease: false
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.KEY_PROMPT_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/chrome/key-prompt-(cat steps.extract_version.outputs.version).zip
-          asset_name: key-prompt-(cat steps.extract_version.outputs.version).zip
+          asset_path: ./dist/chrome/key-prompt-${{ steps.extract_version.outputs.version }}.zip
+          asset_name: key-prompt-${{ steps.extract_version.outputs.version }}.zip
           asset_content_type: application/zip
